@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import './HomePage.dart';
-import './Library.dart';
-import './Download.dart';
-import 'package:mega/Sign/SignIn.dart';
-import 'package:mega/AppBarPages/DrawerPages/Setting.dart';
-import 'package:mega/Screens/Load Page.dart';
-import '../AppBarPages/DrawerPages/Profile.dart';
-import '../AppBarPages/Search.dart';
-import '../AppBarPages/DrawerPages/ContactUs.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../appBar/drawerPages/setting.dart';
+import '../appBar/drawerPages/profile.dart';
+import '../appBar/drawerPages/contactUs.dart';
+import '../sign/sign_In.dart';
+import '../appBar/search.dart';
+import './homePage.dart';
+import './library.dart';
+import './download.dart';
+
+
 
 
 
@@ -169,57 +170,6 @@ class _MainPageState extends State<MainPage> {
 
             ),
              ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//          Padding(
-//            padding: const EdgeInsets.only(top: 25,bottom: 15),
-//            child: Column(
-//              children: <Widget>[
-//                InkWell(
-//                    onTap: () {
-//                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
-//                    },
-//                    child: drawerItem('Profile', Icons.person_outline)),
-//                InkWell(
-//                    onTap: () {
-//                      Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingPage()));
-//                    },
-//                    child: drawerItem('Settings', Icons.settings)),
-//                InkWell(
-//                    onTap: () {
-//                      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoadPage()));
-//                      print( Categories().list[0]['image']);
-//
-//
-//                      },
-//                    child:
-//                    drawerItem('Notifactions', Icons.notifications_none)),
-//                InkWell(
-//                    onTap: () {
-//
-//                    },
-//                    child: drawerItem('Reviews', Icons.star_border)),
-//                InkWell(onTap:(){
-//                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUs()));
-//                },
-//                    child: drawerItem('Contact Us', Icons.mail_outline)),
-//
-//              ],
-//            ),
-//          ),
         ],
       ),
     );

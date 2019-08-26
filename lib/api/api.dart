@@ -1,4 +1,4 @@
-Map<String,dynamic> Movie =
+Map<String,dynamic> movie =
 {
   'movie':[
     {

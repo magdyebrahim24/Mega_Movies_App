@@ -1,49 +1,56 @@
 import 'package:flutter/material.dart';
-import './player.dart';
+import 'package:flutter/services.dart';
+import 'package:share/share.dart';
 import '../../api/api.dart';
+import './video_Player.dart';
 
-class VideoPlayer extends StatefulWidget {
-  int index;
-  dynamic _actors;
-  VideoPlayer(this.index, this._actors);
+// ignore: must_be_immutable
+class MovieDetails extends StatefulWidget {
+  int _indexOfMovieName;
+  dynamic _actorsDetail;
+  MovieDetails(this._indexOfMovieName, this._actorsDetail);
   @override
-  _VideoPlayerState createState() => _VideoPlayerState();
+  _MovieDetailsState createState() => _MovieDetailsState();
 }
 
-class _VideoPlayerState extends State<VideoPlayer> {
+class _MovieDetailsState extends State<MovieDetails> {
   Color _txtColor = Colors.teal[500];
   Color _btnColor = Colors.teal[300];
-
-  Widget _icon(IconData a) {
+  Widget _createIcon(
+    IconData icon,
+  ) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0, right: 1, left: 4),
-      child: InkWell(
-        onTap: () {
-          print(widget.index);
-        },
-        child: Container(
-          height: 42,
-          width: 42,
-          decoration: BoxDecoration(color: _btnColor, shape: BoxShape.circle),
-          child: Icon(a),
+      padding: const EdgeInsets.only(
+        top: 5.0,
+        right: 1,
+        left: 4,
+      ),
+      child: Container(
+        height: 42,
+        width: 42,
+        decoration: BoxDecoration(
+          color: _btnColor,
+          shape: BoxShape.circle,
         ),
+        child: Icon(icon),
       ),
     );
   }
 
-  Widget _actorWidget({String img, String actor}) {
+  Widget _actorDetail({String actorImage, String actorName}) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Column(
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: _txtColor)),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.teal[500]),
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                img,
+                actorImage,
                 fit: BoxFit.cover,
                 height: 150,
                 width: 100,
@@ -55,7 +62,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
           ),
           Center(
               child: Text(
-            actor,
+            actorName,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ))
         ],
@@ -63,7 +70,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     );
   }
 
-  Widget stars({final double pad = 0.0}) {
+  Widget _endOfPage({final double padding = 0.0}) {
     return Column(
       children: <Widget>[
         Padding(
@@ -77,13 +84,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
         SizedBox(
           height: 185,
           child: Padding(
-            padding: EdgeInsets.only(left: pad, right: 10),
+            padding: EdgeInsets.only(left: padding, right: 10),
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: widget._actors.length,
-                itemBuilder: (BuildContext context, index) => _actorWidget(
-                      actor: widget._actors[index]['ActorName'],
-                      img: widget._actors[index]['ActorImg'],
+                itemCount: widget._actorsDetail.length,
+                itemBuilder: (BuildContext context, index) => _actorDetail(
+                      actorName: widget._actorsDetail[index]['ActorName'],
+                      actorImage: widget._actorsDetail[index]['ActorImg'],
                     )),
           ),
         ),
@@ -91,7 +98,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     );
   }
 
-  Widget _fullPage(Orientation o) {
+  Widget _fullPageOfMovie(Orientation o) {
     return Column(
       children: <Widget>[
         SizedBox(
@@ -100,7 +107,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
           child: Text(
-            Movie['movie'][widget.index]['MovieName'],
+            movie['movie'][widget._indexOfMovieName]['MovieName'],
             style: TextStyle(
               fontWeight: FontWeight.bold,
               decorationColor: _txtColor,
@@ -119,7 +126,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  Movie['movie'][widget.index]['Description'],
+                  movie['movie'][widget._indexOfMovieName]['Description'],
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -129,15 +136,23 @@ class _VideoPlayerState extends State<VideoPlayer> {
               padding: const EdgeInsets.only(right: 8.0),
               child: Column(
                 children: <Widget>[
-                  _icon(Icons.file_download),
-                  _icon(Icons.share),
-                  _icon(Icons.add_shopping_cart),
+                  _createIcon(
+                    Icons.file_download,
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Share.share('check out my website https://example.com');
+                      },
+                      child: _createIcon(Icons.share)),
+                  _createIcon(Icons.add_shopping_cart),
                 ],
               ),
             ),
           ],
         ),
-        o == Orientation.portrait ? stars(pad: 1.0) : stars(pad: 140),
+        o == Orientation.portrait
+            ? _endOfPage(padding: 1.0)
+            : _endOfPage(padding: 140),
         SizedBox(
           height: 20,
         ),
@@ -148,10 +163,11 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget _videoPlayer(Orientation o) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: o == Orientation.portrait ? 240 : 500,
+      height: o == Orientation.portrait ? 215 : 375,
       child: RotatedBox(
         quarterTurns: 0,
-        child: Player(Movie['movie'][widget.index]['DescVideo']),
+        child: PlayerOfVideo(
+            movie['movie'][widget._indexOfMovieName]['DescVideo']),
       ),
     );
   }
@@ -159,12 +175,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: ListView(
           children: <Widget>[
             _videoPlayer(orientation),
-            _fullPage(orientation),
+            _fullPageOfMovie(orientation),
           ],
         ));
   }

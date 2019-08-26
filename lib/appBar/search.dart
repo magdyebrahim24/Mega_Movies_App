@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import '../Screens/VideoPlayer/VideoPlayer.dart';
+import '../screens/videoPlayer/movie_Details.dart';
 import '../api/api.dart';
-import '../api/Movie_Api.dart';
+
 
 int current = 0;
-var list = Movie['movie'][current]['actor'] as List;
+var list = movie['movie'][current]['actor'] as List;
 var _actors = list.map((i) =>((i))).toList();
 
 class SearchBox extends SearchDelegate<String> {
 
 
-  List<String> nameList = ApiList().movieName;
+  List<String> nameList = movie['movie']['MovieName'];
   final searchedList = [];
 
   @override
@@ -33,7 +33,7 @@ query='';
 
   @override
   Widget buildResults(BuildContext context) {
-    return VideoPlayer(current,_actors);
+    return MovieDetails(current,_actors);
   }
 
   @override

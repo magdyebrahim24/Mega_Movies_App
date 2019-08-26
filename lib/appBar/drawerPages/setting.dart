@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../MainPages/MainPageCode.dart';
-import '../../AppBarPages/DrawerPages/Privacy_Policy.dart';
+import '../../mainPages/mainPage.dart';
+import '../../appBar/drawerPages/privacyPolicy.dart';
+
 class SettingPage extends StatefulWidget {
   @override
   _SettingPageState createState() => _SettingPageState();

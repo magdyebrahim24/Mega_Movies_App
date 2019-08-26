@@ -1,20 +1,23 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../Screens/SeeAllPage.dart';
-import '../Screens/VideoPlayer/VideoPlayer.dart';
+import '../screens/watch_All_Movie.dart';
+import '../screens/videoPlayer/movie_Details.dart';
 import '../api/api.dart';
 
 List<String> _listImage(var movieMap){
   List<Map> listt =movieMap as List;
   List<String> listImage = new List<String>();
-  for(int i=0; i < Movie['movie'].length; i++){
+  for(int i=0; i < movie['movie'].length; i++){
     listImage.add('${listt[i]['MovieImg']}');
   }
 return listImage;
 }
 
-int _actorIndex=0;
 int current;
+var list = movie['movie'][current]['actor'] as List;
+var _actors = list.map((i) =>((i))).toList();
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   // variable to use it in carusaul slider widget to have index value
   //  Cursor slider the first widget in home screen [ New Movies ]
-  Widget carouselSliderWidget(String labelText) {
+  Widget carouselSliderWidget(String labelText,Orientation o) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -42,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                    Expanded(child: Text(labelText,)),
                   InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>SeeAll()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllMovie()));
                     },
                     child: seeAllButton(),
                   ),
@@ -59,21 +62,19 @@ class _HomePageState extends State<HomePage> {
             enableInfiniteScroll: true,
             scrollDirection: Axis.horizontal,
             viewportFraction: .8,
-            height: MediaQuery.of(context).size.height / 3.60,
+            height: o == Orientation.portrait ? MediaQuery.of(context).size.height / 3.60:180,
             onPageChanged: (index) {
               setState(() {
                 current = index;
               });
             },
-            items: _listImage(Movie['movie']).map((i) {
+            items: _listImage(movie['movie']).map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return InkWell(
                     onTap: (){
                       setState(() {
-                        var list = Movie['movie'][i]['actor'] as List;
-                        var _actors = list.map((i) =>((i))).toList();
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPlayer(current, _actors)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MovieDetails(current, _actors)));
                       });
                       },
                     child: Container(
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                 // for button [ see alll ]
                 InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SeeAll()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AllMovie()));
                   },
                   child: seeAllButton(),
                 ),
@@ -123,29 +124,45 @@ class _HomePageState extends State<HomePage> {
             height: MediaQuery.of(context).size.height / 3.70,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: Movie['movie'].length,
+                itemCount: movie['movie'].length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: InkWell(
                       onTap: (){
                         setState(() {
-                          var list = Movie['movie'][index]['actor'] as List;
+                          var list = movie['movie'][index]['actor'] as List;
                           var _actors = list.map((i) =>((i))).toList();
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> VideoPlayer(index,_actors)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> MovieDetails(index,_actors)));
                         });
-                        print(Movie['movie']);
-                        print('${Movie['movie'].length},$index,$_actorIndex');
                       },
-                      child: Container(
-                        width: 140,
-                        height: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(8),
-                          image: DecorationImage(image: AssetImage(Movie['movie'][index]['MovieImg']),fit: BoxFit.fill)
-                        ),
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: 140,
+                            height: MediaQuery.of(context).size.height,
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(image: AssetImage(movie['movie'][index]['MovieImg']),fit: BoxFit.fill)
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 40,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                color: Colors.white10,
+                              ),
+                              child: Text(movie['movie'][index]['MovieName'],style: TextStyle(color: Colors.white,
+                                  fontSize: 16),textAlign: TextAlign.center,),
+                            ),
+                          ),
+                        ],
                       ),
+
                     ),
                   );
                 }),
@@ -166,22 +183,21 @@ class _HomePageState extends State<HomePage> {
     ),
     child: Text('See all',style: TextStyle(color: Colors.white,fontSize: 14),),
     );
-
   }
-
   @override
   Widget build(BuildContext context) {
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    SystemChrome.restoreSystemUIOverlays();
       return Scaffold(
         backgroundColor: Colors.white,
 
         body: ListView(
           children: <Widget>[
-            carouselSliderWidget(_newMovies),
+            carouselSliderWidget(_newMovies,orientation),
             verticalScroll(_mostShow),
             verticalScroll(_arabicMovies),
             verticalScroll(_topRated),
             verticalScroll(_cartoon),
-
             // to make space under last List view in the end of screen
             SizedBox(
               height: 15,

@@ -1,35 +1,42 @@
-import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import '../Sign/SignIn.dart';
-
+import '../sign/sign_In.dart';
+import 'dart:async';
 
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => _SplashState();
 }
-
 class _SplashState extends State<Splash> {
   @override
   void initState() {
     Timer(
-        Duration(seconds: 4),
-        () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignIn())));
+      Duration(seconds: 4),
+      () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignIn(),
+            ),
+          ),
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                  'assets/full-bloom.png',
-                ),
-                fit: BoxFit.cover)),
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/full-bloom.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -40,11 +47,13 @@ class _SplashState extends State<Splash> {
               width: 130,
               fit: BoxFit.contain,
             ),
-
             Text(
               'MEGA',
               style: TextStyle(
-                  color: Colors.teal, fontSize: 40, fontFamily: 'LobsterTwo'),
+                color: Colors.teal,
+                fontSize: 40,
+                fontFamily: 'LobsterTwo',
+              ),
             ),
           ],
         ),
@@ -52,7 +61,3 @@ class _SplashState extends State<Splash> {
     );
   }
 }
-
-
-//flutter pub get
-//flutter pub pub run flutter_launcher_icons:main

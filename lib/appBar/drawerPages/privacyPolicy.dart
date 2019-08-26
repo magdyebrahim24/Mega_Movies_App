@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../MainPages/MainPageCode.dart';
+import '../../mainPages/mainPage.dart';
+
 class PrivacyPolicy extends StatefulWidget {
   @override
   _PrivacyPolicyState createState() => _PrivacyPolicyState();
