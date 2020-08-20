@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import '../sign/sign_In.dart';
 import 'dart:async';
@@ -24,7 +23,6 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,

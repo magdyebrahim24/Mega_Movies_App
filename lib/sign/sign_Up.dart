@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../mainPages/mainPage.dart';
 import 'sign_In.dart';
 
 class SingUp extends StatefulWidget {
@@ -64,22 +63,6 @@ class _SingUpState extends State<SingUp> {
             },
           ),
         ),
-        // for close icon
-        Positioned(
-          top: 4,
-          right: 4,
-          child: IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.teal,
-              size: 27,
-            ),
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => MainPage()));
-            },
-          ),
-        ),
       ],
     );
   }
@@ -138,7 +121,7 @@ class _SingUpState extends State<SingUp> {
         onTap: () {},
         child: Container(
             alignment: Alignment.center,
-            height: 45,
+            height: 42,
             width: 200,
             decoration: BoxDecoration(
                 color: Colors.teal[300], borderRadius: BorderRadius.circular(20)),
@@ -207,7 +190,7 @@ class _SingUpState extends State<SingUp> {
           Text(
             'Already Have account',
             style: TextStyle(
-              color: Colors.black26,
+              color: Colors.blueGrey,
               fontSize: 13,
             ),
           ),
@@ -255,7 +238,7 @@ class _SingUpState extends State<SingUp> {
                 icon: Icons.lock_open,
                 obSecure: true),
             textForm(
-                hintText: 'ReEnter Password',
+                hintText: 'Confirm Password',
                 icon: Icons.lock_open,
                 obSecure: true),
             _signUpButton(),
@@ -267,19 +250,22 @@ class _SingUpState extends State<SingUp> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: 1,
-                    color: Colors.black26,
-                    width: 80,
+                    height: 0.5,
+                    color: Colors.blueGrey,
+                    width: 75,
                   ),
-                  Text(
-                    'Or Sign Up With',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13, color: Colors.teal[300]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      'Or Sign Up With',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13, color: Colors.teal[300]),
+                    ),
                   ),
                   Container(
-                    height: 1,
-                    color: Colors.black26,
-                    width: 80,
+                    height: 0.5,
+                    color: Colors.blueGrey,
+                    width: 75,
                   ),
                 ],
               ),

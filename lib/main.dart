@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'Screens/splash.dart';
+import 'theme/custom_theme.dart';
+import 'theme/themes.dart';
 
 void main() {
   runApp(
-    MaterialApp(
-      title: 'Mega',
-      theme: ThemeData(
-        textTheme: TextTheme(
-          body1: TextStyle(
-            color: Colors.teal[800],
-            fontSize: 19,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Comfortaa',
-          ),
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Splash(),
+    CustomTheme(
+      initialThemeKey: MyThemeKeys.LIGHT,
+      child: MyApp(),
     ),
   );
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+//    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+//      statusBarColor: Colors.teal,
+//      statusBarIconBrightness: Brightness.dark,
+//      statusBarBrightness: Brightness.light// status bar color
+//    ));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MeGa',
+      theme: CustomTheme.of(context),
+      home: Splash(),
+    );
+  }
 }

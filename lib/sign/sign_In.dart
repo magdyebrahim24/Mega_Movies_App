@@ -4,18 +4,16 @@ import '../mainPages/mainPage.dart';
 import './sign_Up.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class SignIn extends StatefulWidget {
-
-
   @override
   _SignInState createState() => _SignInState();
 }
+
 class _SignInState extends State<SignIn> {
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _userPasswordController = TextEditingController();
-  String _errorPassword ='Forget Password';
-  Color _colorErrorPassword = Colors.black26;
+  String _errorPassword = 'Forget Password';
+  Color _colorErrorPassword = Colors.blueGrey;
 
   _launchFaceURL() async {
     const url = 'https://www.facebook.com/login.php';
@@ -25,6 +23,7 @@ class _SignInState extends State<SignIn> {
       throw 'Could not launch $url';
     }
   }
+
   _launchTwitterURL() async {
     const url = 'https://twitter.com/home?lang=ar';
     if (await canLaunch(url)) {
@@ -33,96 +32,17 @@ class _SignInState extends State<SignIn> {
       throw 'Could not launch $url';
     }
   }
+
   _launchGmailURL() async {
-    const url = 'https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&service=mail&sacu=1&rip=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin';
+    const url =
+        'https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&service=mail&sacu=1&rip=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       throw 'Could not launch $url';
     }
   }
-//Before calling any methods, set the configuration
-  Widget _signInTextForm(
-      {String hintText,
-      IconData icon,
-      bool obSecure = false,
-      TextEditingController textController}
-      ){
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.teal.withOpacity(0.5),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      child: Row(
-        children: <Widget>[
-          new Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-            child: Icon(
-              icon,
-              color: Colors.teal[200],
-            ),
-          ),
-          Container(
-            height: 30.0,
-            width: 1.0,
-            color: Colors.teal.withOpacity(0.5),
-            margin: const EdgeInsets.only(left: 00.0, right: 10.0),
-          ),
-          new Expanded(
-            child: TextFormField(
-              controller: textController,
-              obscureText: obSecure,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: hintText,
-                hintStyle: TextStyle(color: Colors.teal[200]),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-  Widget _signInButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 110, vertical: 5),
-      child: InkWell(
-        onTap: (){
-          if(
-              _userNameController.text.trim()=='user'&&
-              _userPasswordController.text.trim()=='user'
-          ){
-            setState(() {
-              _errorPassword ='Forget Password';
-              _colorErrorPassword = Colors.black26;
-            });
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainPage()));
-          }else{
-              setState(() {
-                _errorPassword='Sorry UserName or Password Wrong';
-                _colorErrorPassword=Colors.red;
-              });
-          }
-        },
-          child: Container(
-            alignment: Alignment.center,
-            height: 45,
-            width: 200,
-            decoration: BoxDecoration(
-                color: Colors.teal[300], borderRadius: BorderRadius.circular(20)),
-            child: Text(
-              'Sign In',
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-          ),
-      ),
-    );
-  }
+
   Widget _topOfPage() {
     return Stack(
       children: <Widget>[
@@ -189,6 +109,89 @@ class _SignInState extends State<SignIn> {
       ],
     );
   }
+
+  //Before calling any methods, set the configuration
+  Widget _signInTextForm(
+      {String hintText,
+      IconData icon,
+      bool obSecure = false,
+      TextEditingController textController}) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.teal.withOpacity(0.5),
+          width: 1.0,
+        ),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      child: Row(
+        children: <Widget>[
+          new Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+            child: Icon(
+              icon,
+              color: Colors.teal[200],
+            ),
+          ),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.teal.withOpacity(0.5),
+            margin: const EdgeInsets.only(left: 00.0, right: 10.0),
+          ),
+          new Expanded(
+            child: TextFormField(
+              controller: textController,
+              obscureText: obSecure,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: hintText,
+                hintStyle: TextStyle(color: Colors.teal[200]),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _signInButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 110, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          if (_userNameController.text.trim() == 'user' &&
+              _userPasswordController.text.trim() == 'user') {
+            setState(() {
+              _errorPassword = 'Forget Password';
+              _colorErrorPassword = Colors.blueGrey;
+            });
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainPage()));
+          } else {
+            setState(() {
+              _errorPassword = 'Sorry UserName or Password Wrong';
+              _colorErrorPassword = Colors.red;
+            });
+          }
+        },
+        child: Container(
+          alignment: Alignment.center,
+          height: 42,
+          width: 200,
+          decoration: BoxDecoration(
+              color: Colors.teal[300], borderRadius: BorderRadius.circular(20)),
+          child: Text(
+            'Sign In',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+      ),
+    );
+  }
+
+
   Widget _socialMediaIcons() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -197,7 +200,9 @@ class _SignInState extends State<SignIn> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           InkWell(
-            onTap: () {_launchFaceURL();},
+            onTap: () {
+              _launchFaceURL();
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 7),
               child: Icon(
@@ -221,7 +226,7 @@ class _SignInState extends State<SignIn> {
             ),
           ),
           InkWell(
-            onTap: (){
+            onTap: () {
               _launchGmailURL();
             },
             child: Padding(
@@ -237,8 +242,9 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -246,8 +252,15 @@ class _SignInState extends State<SignIn> {
           SizedBox(
             height: 20,
           ),
-          _signInTextForm(hintText:'User Name',icon:Icons.person_outline,textController: _userNameController),
-          _signInTextForm(hintText:'Password',icon:Icons.lock_open,obSecure:true,textController:_userPasswordController),
+          _signInTextForm(
+              hintText: 'User Name',
+              icon: Icons.person_outline,
+              textController: _userNameController),
+          _signInTextForm(
+              hintText: 'Password',
+              icon: Icons.lock_open,
+              obSecure: true,
+              textController: _userPasswordController),
           _signInButton(),
           // for forget password text
           InkWell(
@@ -273,18 +286,22 @@ class _SignInState extends State<SignIn> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  height: 1,
-                  color: Colors.black26,
-                  width: 80,
+                  height: .5,
+                  color: Colors.blueGrey,
+                  width: 75,
                 ),
-                Text(
-                  'Or Sign in With',textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, color: Colors.teal[300]),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Or Sign in With',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13, color: Colors.teal[300]),
+                  ),
                 ),
                 Container(
-                  height: 1,
-                  color: Colors.black26,
-                  width: 80,
+                  height: .5,
+                  color: Colors.blueGrey,
+                  width: 75,
                 ),
               ],
             ),
@@ -300,14 +317,15 @@ class _SignInState extends State<SignIn> {
                 Text(
                   "Don't Have account",
                   style: TextStyle(
-                    color: Colors.black26,
+                    color: Colors.blueGrey,
                     fontSize: 13,
                   ),
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SingUp()),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SingUp()),
                     );
                   },
                   child: Padding(
@@ -329,6 +347,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 }
+
 // class to clip photo in the top of screen
 class MyClipper extends CustomClipper<Path> {
   @override

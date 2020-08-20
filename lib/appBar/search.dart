@@ -2,23 +2,26 @@ import 'package:flutter/material.dart';
 import '../screens/videoPlayer/movie_Details.dart';
 import '../api/api.dart';
 
-
-int current = 0;
-var list = movie['movie'][current]['actor'] as List;
-var _actors = list.map((i) =>((i))).toList();
-
 class SearchBox extends SearchDelegate<String> {
-
-
-  List<String> nameList = movie['movie']['MovieName'];
+  List<String> _listName(var movieMap) {
+    List<Map> list = movieMap as List;
+    List<String> listName = new List<String>();
+    for (int i = 0; i < movie['movie'].length; i++) {
+      listName.add('${list[i]['MovieName']}');
+    }
+    return listName;
+  }
   final searchedList = [];
-
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [IconButton(icon: Icon(Icons.clear),
-        onPressed: () {
-query='';
-        })];
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          color: Theme.of(context).accentColor,
+          onPressed: () {
+            query = '';
+          })
+    ];
   }
 
   @override
@@ -26,39 +29,56 @@ query='';
     return IconButton(
         icon: AnimatedIcon(
             icon: AnimatedIcons.menu_arrow,
-            progress:transitionAnimation), onPressed: (){
+            color: Theme.of(context).accentColor,
+            progress: transitionAnimation),
+        onPressed: () {
           close(context, null);
-    });
+        });
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return MovieDetails(current,_actors);
+    return SizedBox();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestionList = query.isEmpty ? searchedList :
-    nameList .where((p) => p.startsWith(query) ).toList();
+    var suggestionList = query.isEmpty
+        ? searchedList
+        : _listName(movie['movie']).where((p) => p.toUpperCase().
+        contains(query.toUpperCase())).toList();
+    suggestionList.sort();
     return ListView.builder(
         itemCount: suggestionList.length,
-        itemBuilder: (context,index){
-      return ListTile(
-        onTap: (){
-          showResults(context);
-        },
-        leading: Icon(Icons.local_movies),
-        title: RichText(text: TextSpan(
-          text: suggestionList[index].substring(0,query.length),
-              style: 
-            TextStyle(color: Colors.teal,fontWeight: FontWeight.bold),
-          children: [TextSpan(
-            text: suggestionList[index].substring(query.length),
-            style: TextStyle(color: Colors.black26)
-          )]
-        )),
-      );
-
-    });
+        itemBuilder: (context, index) {
+          return ListTile(
+            onTap: () {
+              List<String> x = _listName(movie['movie']);
+              int y = x.indexOf(suggestionList[index]);
+              List list = movie['movie'][y]['actor'] as List;
+              List _actors = list.map((i) => ((i))).toList();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          MovieDetails(y, _actors)));
+            },
+            leading: Icon(
+              Icons.local_movies,
+              color: Theme.of(context).accentColor,
+            ),
+            title: RichText(
+                text: TextSpan(
+                    text: suggestionList[index].substring(0, query.length),
+                    style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.bold),
+                    children: [
+                  TextSpan(
+                      text: suggestionList[index].substring(query.length),
+                      style: TextStyle(color: Colors.teal[200]))
+                ])),
+          );
+        });
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:share/share.dart';
+import 'package:youtube_player/youtube_player.dart';
 import '../../api/api.dart';
-import './video_Player.dart';
 
 // ignore: must_be_immutable
 class MovieDetails extends StatefulWidget {
@@ -14,11 +12,9 @@ class MovieDetails extends StatefulWidget {
 }
 
 class _MovieDetailsState extends State<MovieDetails> {
-  Color _txtColor = Colors.teal[500];
-  Color _btnColor = Colors.teal[300];
-  Widget _createIcon(
-    IconData icon,
-  ) {
+  int _setFavoriteIcon = 1;
+  int _downloadedIcon = 1;
+  Widget _createIcon({IconData icon, Color colorIcon}) {
     return Padding(
       padding: const EdgeInsets.only(
         top: 5.0,
@@ -29,10 +25,13 @@ class _MovieDetailsState extends State<MovieDetails> {
         height: 42,
         width: 42,
         decoration: BoxDecoration(
-          color: _btnColor,
+          color: Theme.of(context).accentColor,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon),
+        child: Icon(
+          icon,
+          color: colorIcon,
+        ),
       ),
     );
   }
@@ -45,14 +44,14 @@ class _MovieDetailsState extends State<MovieDetails> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.teal[500]),
+              border: Border.all(color: Theme.of(context).accentColor),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
                 actorImage,
                 fit: BoxFit.cover,
-                height: 150,
+                height: MediaQuery.of(context).size.height * .23,
                 width: 100,
               ),
             ),
@@ -60,11 +59,19 @@ class _MovieDetailsState extends State<MovieDetails> {
           SizedBox(
             height: 5.0,
           ),
-          Center(
-              child: Text(
-            actorName,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ))
+          SizedBox(
+            width: 100,
+            child: Text(
+              actorName,
+              textAlign: TextAlign.center,
+              maxLines: 3,
+              overflow: TextOverflow.clip,
+              style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.bold),
+            ),
+          )
         ],
       ),
     );
@@ -74,17 +81,18 @@ class _MovieDetailsState extends State<MovieDetails> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text(
             'Stars',
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, color: _txtColor),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).accentColor),
           ),
         ),
         SizedBox(
-          height: 185,
+          height: MediaQuery.of(context).size.height * .30,
           child: Padding(
-            padding: EdgeInsets.only(left: padding, right: 10),
+            padding: EdgeInsets.only(left: padding, right: 5.0),
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: widget._actorsDetail.length,
@@ -98,22 +106,22 @@ class _MovieDetailsState extends State<MovieDetails> {
     );
   }
 
-  Widget _fullPageOfMovie(Orientation o) {
+  Widget _fullPageOfMovie() {
     return Column(
       children: <Widget>[
         SizedBox(
-          height: 3,
+          height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
           child: Text(
             movie['movie'][widget._indexOfMovieName]['MovieName'],
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              decorationColor: _txtColor,
+              decorationColor: Theme.of(context).accentColor,
               letterSpacing: 1,
-              fontSize: 30,
-              color: _txtColor,
+              fontSize: 27,
+              color: Theme.of(context).accentColor,
             ),
             maxLines: 3,
             softWrap: true,
@@ -124,11 +132,15 @@ class _MovieDetailsState extends State<MovieDetails> {
           children: <Widget>[
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Text(
                   movie['movie'][widget._indexOfMovieName]['Description'],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -136,23 +148,56 @@ class _MovieDetailsState extends State<MovieDetails> {
               padding: const EdgeInsets.only(right: 8.0),
               child: Column(
                 children: <Widget>[
-                  _createIcon(
-                    Icons.file_download,
-                  ),
                   InkWell(
                       onTap: () {
-                        Share.share('check out my website https://example.com');
+                        setState(() {
+                          if (_setFavoriteIcon == 1) {
+                            _setFavoriteIcon = 0;
+                            if (!(favList.contains(widget._indexOfMovieName))) {
+                              favList.add(widget._indexOfMovieName);
+                            }
+                          } else {
+                            _setFavoriteIcon = 1;
+                            favList.remove(widget._indexOfMovieName);
+                          }
+                        });
                       },
-                      child: _createIcon(Icons.share)),
-                  _createIcon(Icons.add_shopping_cart),
+                      child: _setFavoriteIcon == 1 &&
+                              !favList.contains(widget._indexOfMovieName)
+                          ? _createIcon(
+                              icon: Icons.favorite, colorIcon: Colors.white)
+                          : _createIcon(
+                              icon: Icons.favorite,
+                              colorIcon: Colors.tealAccent)
+                      ),
+                  InkWell(
+                      onTap: () {
+                        setState(() {
+                          if (_downloadedIcon == 1) {
+                            _downloadedIcon = 0;
+                            if (!(downloadList.contains(widget._indexOfMovieName))) {
+                              downloadList.add(widget._indexOfMovieName);
+                            }
+                          } else {
+                            _downloadedIcon = 1;
+                            downloadList.remove(widget._indexOfMovieName);
+                          }
+                        });
+                      },
+                      child: _downloadedIcon == 1 &&
+                          !downloadList.contains(widget._indexOfMovieName)
+                          ? _createIcon(
+                              icon: Icons.file_download,
+                              colorIcon: Colors.white)
+                          : _createIcon(
+                              icon: Icons.file_download,
+                              colorIcon: Colors.tealAccent)),
                 ],
               ),
             ),
           ],
         ),
-        o == Orientation.portrait
-            ? _endOfPage(padding: 1.0)
-            : _endOfPage(padding: 140),
+        _endOfPage(),
         SizedBox(
           height: 20,
         ),
@@ -160,29 +205,33 @@ class _MovieDetailsState extends State<MovieDetails> {
     );
   }
 
-  Widget _videoPlayer(Orientation o) {
+  Widget _videoPlayer() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: o == Orientation.portrait ? 215 : 375,
+      height: 240,
       child: RotatedBox(
         quarterTurns: 0,
-        child: PlayerOfVideo(
-            movie['movie'][widget._indexOfMovieName]['DescVideo']),
+        child: YoutubePlayer(
+          context: context,
+          source: movie['movie'][widget._indexOfMovieName]['DescVideo'],
+          quality: YoutubeQuality.MEDIUM,
+          aspectRatio: 3 / 2,
+          playerMode: YoutubePlayerMode.DEFAULT,
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final Orientation orientation = MediaQuery.of(context).orientation;
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: ListView(
-          children: <Widget>[
-            _videoPlayer(orientation),
-            _fullPageOfMovie(orientation),
-          ],
-        ));
+      resizeToAvoidBottomInset: false,
+      body: ListView(
+        children: <Widget>[
+          _videoPlayer(),
+          _fullPageOfMovie(),
+        ],
+      ),
+    );
   }
 }
