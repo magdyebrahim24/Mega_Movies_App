@@ -1,7 +1,7 @@
 # Mega Movie App
 - ###   An Movies App using flutter and firebase .
 
-![Image of Yaktocat](/assets/mega-gif.gif)
+![App Gif ](/assets/mega-gif.gif)
 
 
 -----------------------------------------------------------------------------
