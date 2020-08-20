@@ -19,4 +19,4 @@
 -----------------------------------------------------------------------------
 
 ### Apk Link To Download and Install :
-    - ![https://drive.google.com/file/d/1d8JvtJK1aGbSQoauuOmhm85iEMMQIf8_/view?usp=sharing]
+    - https://drive.google.com/file/d/1d8JvtJK1aGbSQoauuOmhm85iEMMQIf8_/view?usp=sharing
